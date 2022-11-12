@@ -40,7 +40,7 @@
       type: ethernet
       conn_name: eth1 via ansible
       ifname: eth1
-      routes4: 172.16.2.160/28 172.16.2.162
+      routes4: 172.16.2.160/28 172.16.2.132
       state: present
 
   

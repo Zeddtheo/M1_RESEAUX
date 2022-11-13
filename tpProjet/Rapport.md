@@ -7,9 +7,9 @@
    
 2. Routage : Suite à la disparition tragique de VM2-6, faut-il modifier les informations de routage sur VM1 ? ou sur VM1-6 ?
    
-3. Faire un ping6 fc00:1234:ffff::1. Donner la capture sur tun0 (avec wireshark). Que constatez-vous ?
+3. Faire un ping6 fc00:<zero-width space>1234:ffff::1. Donner la capture sur tun0 (avec wireshark). Que constatez-vous ?
    
-4. Faire ping6 fc00:1234:ffff::10. Que constatez-vous?
+4. Faire ping6 fc00:<zero-width space>1234:ffff::10. Que constatez-vous?
    
 5. Expliquez.
 ## 2. L'interface virtuelle TUN

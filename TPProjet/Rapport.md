@@ -48,6 +48,7 @@ Il n'y a que des requests et pas de réponses
 Comme cette adresse n'existe pas, il n'y a qu'une demande et pas de réponse.
 
 ### 2.3 Récupération des paquets
+###
 ## 3. Un tunnel simple pour IPv6
 ## 4. Validation Fonctionnelle
 ## 5. Améliorations

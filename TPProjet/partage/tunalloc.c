@@ -10,6 +10,16 @@
 #include <linux/if_tun.h>
 #include "iftun.h"
 
+
+
+void src_dst_copy(int src, int dst)
+{
+	 char buffer[TAILLE_BUFFER];
+	 int nRead;
+	 nRead = read(src, buffer, TAILLE_BUFFER);
+	 if (nRead < 0) return;
+   send (dst, buffer, TAILLE_BUFFER, 0);
+}
 int tun_alloc(char *dev)
 {
   struct ifreq ifr;
@@ -42,18 +52,20 @@ int tun_alloc(char *dev)
 int main (int argc, char** argv){
 
   int tunfd;
-  int dst;
+  int dst=1;
+  
   printf("Création de %s\n",argv[1]);
   tunfd = tun_alloc(argv[1]);
-  src_dst_copy(tunfd,dst);
+  //src_dst_copy(tunfd,dst);
+  //printf("tunfd = %s\n",tunfd);
   printf("Faire la configuration de %s...\n",argv[1]);
   printf("Appuyez sur une touche pour continuer\n");
   getchar(); 
   system("bash /mnt/partage/configure-tun.sh");
-  //system("ip addr");
   printf("Interface %s Configurée:\n",argv[1]);
   system("ip addr");
   printf("Appuyez sur une touche pour terminer\n");
+  getchar();
   getchar();
   return 0;
 }

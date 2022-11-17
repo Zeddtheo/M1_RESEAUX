@@ -20,6 +20,7 @@ void src_dst_copy(int src, int dst)
 	 if (nRead < 0) return;
    send (dst, buffer, TAILLE_BUFFER, 0);
 }
+
 int tun_alloc(char *dev)
 {
   struct ifreq ifr;
@@ -53,7 +54,7 @@ int main (int argc, char** argv){
 
   int tunfd;
   int dst=1;
-  
+
   printf("Création de %s\n",argv[1]);
   tunfd = tun_alloc(argv[1]);
   //src_dst_copy(tunfd,dst);

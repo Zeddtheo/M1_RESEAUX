@@ -42,14 +42,16 @@ Frame 2: 104 bytes on wire (832 bits), 104 bytes captured (832 bits) on interfac
 Raw packet data
 Internet Protocol Version 6, Src: fc00:1234:ffff::1, Dst: fc00:1234:ffff::10
 Internet Control Message Protocol v6
-Il n'y a que des requests et pas de réponses
+
+Il n'y a que des requêtes et pas de réponses.
 ```
 5. Expliquez.
 Comme cette adresse n'existe pas, il n'y a qu'une demande et pas de réponse.
 
 ### 2.3 Récupération des paquets
-1. a
-2. Tester
+2. Tester si la fonction implémentée permet de récupérer la sortie est bien lue.
+
+On peut bien voir ci dessous que cela fonctionne, les données lues sont bien ce qui écrit sur le terminal. 
 ```
 00000000  31 3a 20 6c 6f 3a 20 3c  4c 4f 4f 50 42 41 43 4b  |1: lo: <LOOPBACK|
 00000010  2c 55 50 2c 4c 4f 57 45  52 5f 55 50 3e 20 6d 74  |,UP,LOWER_UP> mt|
@@ -180,6 +182,10 @@ Comme cette adresse n'existe pas, il n'y a qu'une demande et pas de réponse.
 000007be
 
 ```
+
+# Problème concerant les VMs et donc l'avancée du TP. 
+
+L'un des deux membres à eu des soucis concernant la VDI durant la semaine (au début de la semaine, lenteur sur la session et le 17 et 18 novembre impossibilité de créer / lancer une VM).
 3. 
 ## 3. Un tunnel simple pour IPv6
 ## 4. Validation Fonctionnelle

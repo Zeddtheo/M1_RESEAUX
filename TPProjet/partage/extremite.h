@@ -8,6 +8,7 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #define MAXLIGNE 80
+#define PORT 123
 
 int ext_out(char *port,int tun_fd);
 int ext_in(char * hote, char* port, int tunfd);

@@ -72,20 +72,12 @@ int ext_out(char *port,int tun_fd){
 
 //pas encore fini
 int ext_in(char * hote, char* port, int tunfd){
-    char * hote; /* nom d'hôte du  serveur */   
+  char * hote; /* nom d'hôte du  serveur */   
   char * port; /* port TCP du serveur */   
-  char ip[NI_MAXHOST]; /* adresse IPv4 en notation pointée */
+  char ip[INET6_ADDRSTRLEN]; /* adresse IPv6 en notation pointée */
   struct addrinfo *resol; /* struct pour la résolution de nom */
   char * tmpdst; /* chaine pour la notation en IPv6 */
   int s; /* descripteur de socket */
-  
-  /* Traitement des arguments */
-  if (argc!=3) {/* erreur de syntaxe */
-    printf("Usage: %s hote port\n",argv[0]);
-    exit(1);
-  }
-  hote=argv[1]; /* nom d'hôte du  serveur */   
-  port=argv[2]; /* port TCP du serveur */   
 
   /* Résolution de l'hôte */
   if ( getaddrinfo(hote,port,NULL, &resol) < 0 ){
@@ -94,8 +86,6 @@ int ext_in(char * hote, char* port, int tunfd){
   }
 
   /* On extrait l'addresse IP */
-  /* il faut faire l'allocation mémoire */
-  tmpdst = malloc(INET6_ADDRSTRLEN);
   sprintf(ip,"%s",inet_ntop(AF_INET6,
 	((struct sockaddr_in6*)resol->ai_addr)->sin6_addr.s6_addr,tmpdst,INET6_ADDRSTRLEN));
 
@@ -115,38 +105,13 @@ int ext_in(char * hote, char* port, int tunfd){
     exit(4);
   }
   freeaddrinfo(resol); /* /!\ Libération mémoire */
-
+  fprintf(stderrm,"connextion reussie\n");
   /* Session */
   char tampon[MAXLIGNE + 3]; /* tampons pour les communications */
   ssize_t lu;
   int fini=0;
   while( 1 ) { 
-    /* Jusqu'à fermeture de la socket (ou de stdin)     */
-    /* recopier à l'écran ce qui est lu dans la socket  */
-    /* recopier dans la socket ce qui est lu dans stdin */
-
-    /* réception des données */
-    lu = recv(s,tampon,MAXLIGNE,0); /* bloquant */
-    if (lu == 0 ) {
-      fprintf(stderr,"Connexion terminée par l'hôte distant\n");
-      break; /* On sort de la boucle infinie */
-    }
-    tampon[lu] = '\0';
-    printf("reçu: %s",tampon);
-    if ( fini == 1 )
-      break;  /* on sort de la boucle infinie*/
     
-    /* recopier dans la socket ce qui est entré au clavier */    
-    if ( fgets(tampon,MAXLIGNE,stdin) == NULL ){/* entrée standard fermée */
-      fini=1;
-      fprintf(stderr,"Connexion terminée !!\n");
-      fprintf(stderr,"Hôte distant informé...\n");
-      shutdown(s, SHUT_WR); /* terminaison explicite de la socket 
-			     dans le sens client -> serveur */
-      /* On ne sort pas de la boucle tout de suite ... */
-    }else{   /* envoi des données */
-      send(s,tampon,strlen(tampon),0);
-    }
   } 
   /* Destruction de la socket */
   close(s);

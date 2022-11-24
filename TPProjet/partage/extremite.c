@@ -7,18 +7,12 @@ int ext_out(char *port,int tun_fd){
   struct addrinfo indic = {AI_PASSIVE, /* Toute interface */
                            PF_INET6,SOCK_STREAM,0, /* IP mode connecté */
                            0,NULL,NULL,NULL};
-  struct sockaddr_in client; /* adresse de socket du client */
+  struct sockaddr_in6 client; /* adresse de socket du client */
   char * port; /* Port pour le service */
   int err; /* code d'erreur */
-  
-  /* Traitement des arguments */
-  if (argc!=2) { /* erreur de syntaxe */
-    printf("Usage: %s port\n",argv[0]);
-    exit(1);
-  }
-  
-  port=argv[1]; fprintf(stderr,"Ecoute sur le port %s\n",port);
   err = getaddrinfo(NULL,port,&indic,&resol); 
+  fprintf(stderr,"Ecoute sur le port %s\n",port);
+
   if (err<0){
     fprintf(stderr,"Résolution: %s\n",gai_strerror(err));
     exit(2);
@@ -72,10 +66,11 @@ int ext_out(char *port,int tun_fd){
     /* traitement */
     echo(n,hotec,portc);
   }
+   
   return EXIT_SUCCESS;
 }
 
-
+//pas encore fini
 int ext_in(char * hote, char* port, int tunfd){
     char * hote; /* nom d'hôte du  serveur */   
   char * port; /* port TCP du serveur */   

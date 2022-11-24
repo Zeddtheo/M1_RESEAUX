@@ -11,7 +11,6 @@
 #include "iftun.h"
 
 
-
 void src_dst_copy(int src, int dst)
 {
 	 char buffer[TAILLE_BUFFER];

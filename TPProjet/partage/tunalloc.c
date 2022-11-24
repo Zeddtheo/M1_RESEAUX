@@ -67,6 +67,5 @@ int main (int argc, char** argv){
   system("ip addr");
   printf("Appuyez sur une touche pour terminer\n");
   getchar();
-  getchar();
   return 0;
 }

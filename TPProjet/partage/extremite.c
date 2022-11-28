@@ -1,18 +1,36 @@
 #include "extremite.h"
 
-int ext_out(char *port,int tun_fd){
+
+/* echo des messages reçus (le tout via le descripteur f) */
+void echo(int f, int fd)
+{
+  ssize_t lu; /* nb d'octets reçus */
+  char tampon[MAXLIGNE+1]; 
+  printf("Echo Ready\n");
+  while ( 1 ){ /* Faire echo et logguer */
+    lu = read(f,tampon,MAXLIGNE);
+    if (lu > 0 ){
+        tampon[lu] = '\0';
+        printf("Lu out: %s\n",tampon);
+        write(fd,tampon,lu);
+      } 
+    else {
+        break;
+      }
+  }
+       
+  close(f);
+}
+int ext_out(char* port, int fd){
   int s,n; /* descripteurs de socket */
   int len,on; /* utilitaires divers */
   struct addrinfo * resol; /* résolution */
   struct addrinfo indic = {AI_PASSIVE, /* Toute interface */
                            PF_INET6,SOCK_STREAM,0, /* IP mode connecté */
                            0,NULL,NULL,NULL};
-  struct sockaddr_in6 client; /* adresse de socket du client */
-  char * port; /* Port pour le service */
-  int err; /* code d'erreur */
-  err = getaddrinfo(NULL,port,&indic,&resol); 
-  fprintf(stderr,"Ecoute sur le port %s\n",port);
-
+  struct sockaddr_in client; /* adresse de socket du client */
+  int err = getaddrinfo(NULL,port,&indic,&resol); /* code d'erreur */
+   
   if (err<0){
     fprintf(stderr,"Résolution: %s\n",gai_strerror(err));
     exit(2);
@@ -34,7 +52,7 @@ int ext_out(char *port,int tun_fd){
   fprintf(stderr,"Option(s) OK!\n");
 
   /* Association de la socket s à l'adresse obtenue par résolution */
-  if (bind(s,resol->ai_addr,sizeof(struct sockaddr_in))<0) {
+  if (bind(s,resol->ai_addr,sizeof(struct sockaddr_in6))<0) {
     perror("bind");
     exit(5);
   }
@@ -55,64 +73,40 @@ int ext_out(char *port,int tun_fd){
       perror("accept");
       exit(7);
     }
-    /* Nom réseau du client */
-    char hotec[NI_MAXHOST];  char portc[NI_MAXSERV];
-    err = getnameinfo((struct sockaddr*)&client,len,hotec,NI_MAXHOST,portc,NI_MAXSERV,0);
-    if (err < 0 ){
-      fprintf(stderr,"résolution client (%i): %s\n",n,gai_strerror(err));
-    }else{ 
-      fprintf(stderr,"accept! (%i) ip=%s port=%s\n",n,hotec,portc);
+    if(fork() == 0){
+      echo(n,fd);
+      break;
     }
-    /* traitement */
-    echo(n,hotec,portc);
   }
-   
   return EXIT_SUCCESS;
 }
 
-//pas encore fini
-int ext_in(char * hote, char* port, int tunfd){
-  char * hote; /* nom d'hôte du  serveur */   
-  char * port; /* port TCP du serveur */   
-  char ip[INET6_ADDRSTRLEN]; /* adresse IPv6 en notation pointée */
+int ext_in(char * hote, char* port, int fd)
+{
   struct addrinfo *resol; /* struct pour la résolution de nom */
-  char * tmpdst; /* chaine pour la notation en IPv6 */
   int s; /* descripteur de socket */
+  struct addrinfo hints = {AI_PASSIVE,
+                          PF_INET6,SOCK_STREAM,0,
+                          0,NULL,NULL,NULL
+  };
 
-  /* Résolution de l'hôte */
-  if ( getaddrinfo(hote,port,NULL, &resol) < 0 ){
-    perror("résolution adresse");
+  if(getaddrinfo(hote,port,&hints,&resol<0)){
+    perror("resolution addresse");
     exit(2);
   }
-
-  /* On extrait l'addresse IP */
-  sprintf(ip,"%s",inet_ntop(AF_INET6,
-	((struct sockaddr_in6*)resol->ai_addr)->sin6_addr.s6_addr,tmpdst,INET6_ADDRSTRLEN));
-
-  /* Création de la socket, de type TCP / IP */
-  /* On ne considère que la première adresse renvoyée par getaddrinfo */
+ 
   if ((s=socket(resol->ai_family,resol->ai_socktype, resol->ai_protocol))<0) {
     perror("allocation de socket");
     exit(3);
   }
-  fprintf(stderr,"le n° de la socket est : %i\n",s);
 
-  /* Connexion */
-  fprintf(stderr,"Essai de connexion à %s (%s) sur le port %s\n\n",
-	  hote,ip,port);
-  if (connect(s,resol->ai_addr,sizeof(struct sockaddr_in6))<0) {
+  while (connect(s,resol->ai_addr,sizeof(struct sockaddr_in6))<0) {
     perror("connection");
-    exit(4);
+    sleep(1);
   }
   freeaddrinfo(resol); /* /!\ Libération mémoire */
-  fprintf(stderrm,"connextion reussie\n");
-  /* Session */
-  char tampon[MAXLIGNE + 3]; /* tampons pour les communications */
-  ssize_t lu;
-  int fini=0;
-  while( 1 ) { 
-    
-  } 
+
+  src_dst_copy(fd,s);
   /* Destruction de la socket */
   close(s);
 

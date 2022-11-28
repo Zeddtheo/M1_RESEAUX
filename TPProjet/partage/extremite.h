@@ -7,8 +7,11 @@
 #include <netdb.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
+#include "iftun.h"
 #define MAXLIGNE 80
 #define PORT 123
+#define CIAO "Au revoir ...\n"
 
-int ext_out(char *port,int tun_fd);
-int ext_in(char * hote, char* port, int tunfd);
+int ext_out(char* port, int fd);
+int ext_in(char * hote, char* port, int fd);
+void echo(int f, int fd);

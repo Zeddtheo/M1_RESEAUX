@@ -6,7 +6,8 @@ void src_dst_copy(int src, int dst)
 	int data;
 	while(1){
 		data = read(src,buffer,sizeof(buffer));
-		if(data == 0){
+		if(data == -1){
+			return 1;
 		}else{
 			write(dst,buffer,data);
 		}

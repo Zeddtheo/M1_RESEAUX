@@ -190,3 +190,10 @@ L'un des deux membres à eu des soucis concernant la VDI durant la semaine (au d
 ## 3. Un tunnel simple pour IPv6
 ## 4. Validation Fonctionnelle
 ## 5. Améliorations
+
+
+## Lancer le reseaux
+$./up.sh
+#VM: sudo -s
+#VM: ansible-playbook -c local -v /vagrant/config.yml
+$./halt.sh

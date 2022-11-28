@@ -2,6 +2,12 @@
 
 
 /* echo des messages reçus (le tout via le descripteur f) */
+void ip_add_route(char *ip){
+  char tmp[100] = "ip route add";
+  strcat(tmp,ip);
+  printf("add route: %s\n", tmp);
+  system(tmp);
+}
 void echo(int f, int fd)
 {
   ssize_t lu; /* nb d'octets reçus */
@@ -80,7 +86,6 @@ int ext_out(char* port, int fd){
   }
   return EXIT_SUCCESS;
 }
-
 int ext_in(char * hote, char* port, int fd)
 {
   struct addrinfo *resol; /* struct pour la résolution de nom */
@@ -112,4 +117,16 @@ int ext_in(char * hote, char* port, int fd)
 
   fprintf(stderr,"Fin de la session.\n");
   return EXIT_SUCCESS;
+}
+int ext_bi(int tunfd, char *outIp, char *port){
+  int pid = fork();
+  if(pid == -1){
+    perror("fork");
+    exit(EXIT_FAILURE);
+  }
+  if(pid == 0){
+    return ext_in(tunfd,outIp,port);
+  }else{
+    return ext_out(tunfd,port);
+  }
 }

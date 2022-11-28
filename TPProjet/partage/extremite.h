@@ -15,3 +15,4 @@
 int ext_out(char* port, int fd);
 int ext_in(char * hote, char* port, int fd);
 void echo(int f, int fd);
+void ip_add_route(char *ip);

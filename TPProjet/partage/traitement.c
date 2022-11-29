@@ -8,7 +8,6 @@ char* tailleEntete_in (char *buffer, int size) {
   return newAndImprovedBuffer;
 }
 
-
 int tailleEntete_out (char *buffer) {
   if (sizeof(buffer) < 2)
     return -1;

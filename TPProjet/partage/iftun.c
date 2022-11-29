@@ -27,17 +27,24 @@ int tun_alloc(char *dev)
   strcpy(dev, ifr.ifr_name);
   return fd;
 }      
-
-void src_dst_copy(int src, int dst)
-{
-	char buffer[TAILLE_BUFFER];
-	int data;
-	while(1){
-		data = read(src,buffer,sizeof(buffer));
-		if(data == -1){
-			return;
-		}else{
-			write(dst,buffer,data);
-		}
-	}
+void src_dst_copy(int src, int dst){
+  char buffer[TAILLE_BUFFER];
+  int data;
+  data = read(src, buffer, TAILLE_BUFFER);
+  if (data < 0) return;
+	tailleEntete_in(buffer,data);
+	send(data, buffer, TAILLE_BUFFER, 0);
 }
+// void src_dst_copy(int src, int dst)
+// {
+// 	char buffer[TAILLE_BUFFER];
+// 	int data;
+// 	while(1){
+// 		data = read(src,buffer,sizeof(buffer));
+// 		if(data == -1){
+// 			return 1;
+// 		}else{
+// 			write(dst,buffer,data);
+// 		}
+// 	}
+// }

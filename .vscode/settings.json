@@ -3,6 +3,8 @@
         "socket.h": "c",
         "iftun.h": "c",
         "if.h": "c",
-        "if_tun.h": "c"
+        "if_tun.h": "c",
+        "stdio.h": "c",
+        "stdlib.h": "c"
     }
 }

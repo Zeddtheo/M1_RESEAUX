@@ -12,7 +12,8 @@
 #define PORT 123
 #define CIAO "Au revoir ...\n"
 
-int ext_out(char* port, int fd);
-int ext_in(char * hote, char* port, int fd);
+int ext_out(int fd, char *port);
+int ext_in(int fd,char *hote, char *port);
 void echo(int f, int fd);
 void ip_add_route(char *ip);
+int ext_bi(int tunfd,char *outIp, char *port);

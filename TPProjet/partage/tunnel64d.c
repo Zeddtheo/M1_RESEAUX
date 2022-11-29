@@ -80,23 +80,24 @@ void read_config(char *fileName){
   fclose(file);
 }
 
-int main (int argc, char** argv){
-  int tunfd;
-  char dev[2048];
+int main (int argc, char* argv[]){
   if(argc!=2){
     fprintf(stderr,"Usage: %s configFile.txt\n",argv[0]);
     exit(1);
   }
+  int tunfd;
+  char dev[2048];
   read_config(argv[1]);
   show_config();
   strcpy(dev,loadConfig.tun);
+
   tunfd = tun_alloc(dev);
   if(tunfd<0){
     perror("tun alloc");
     exit(1);
   }
   system("bash /mnt/partage/configure-tun.sh");   
-  route_tunnel(loadConfig.outip);
+  ip_add_route(loadConfig.outip);
   ext_bi(tunfd,loadConfig.inip,loadConfig.inport);
   return 0;
   

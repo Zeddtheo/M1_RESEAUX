@@ -27,7 +27,7 @@ void echo(int f, int fd)
        
   close(f);
 }
-int ext_out(char* port, int fd){
+int ext_out(int fd, char *port){
   int s,n; /* descripteurs de socket */
   int len,on; /* utilitaires divers */
   struct addrinfo * resol; /* résolution */
@@ -86,7 +86,7 @@ int ext_out(char* port, int fd){
   }
   return EXIT_SUCCESS;
 }
-int ext_in(char * hote, char* port, int fd)
+int ext_in(int fd, char *hote, char *port)
 {
   struct addrinfo *resol; /* struct pour la résolution de nom */
   int s; /* descripteur de socket */
@@ -95,7 +95,7 @@ int ext_in(char * hote, char* port, int fd)
                           0,NULL,NULL,NULL
   };
 
-  if(getaddrinfo(hote,port,&hints,&resol<0)){
+  if(getaddrinfo(hote,port,&hints,&resol)<0){
     perror("resolution addresse");
     exit(2);
   }

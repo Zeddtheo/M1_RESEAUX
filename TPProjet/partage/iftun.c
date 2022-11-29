@@ -35,7 +35,7 @@ void src_dst_copy(int src, int dst)
 	while(1){
 		data = read(src,buffer,sizeof(buffer));
 		if(data == -1){
-			return 1;
+			return;
 		}else{
 			write(dst,buffer,data);
 		}

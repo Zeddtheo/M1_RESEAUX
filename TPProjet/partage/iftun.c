@@ -28,10 +28,14 @@ int tun_alloc(char *dev)
   return fd;
 }      
 void src_dst_copy(int src, int dst){
+  int nread;
   char buffer[TAILLE_BUFFER];
-  int data;
-  data = read(src, buffer, TAILLE_BUFFER);
-  if (data < 0) return;
-	tailleEntete_in(buffer,data);
-	send(data, buffer, TAILLE_BUFFER, 0);
+  nread = read(src,buffer,sizeof(buffer));
+		if(nread < 0) {
+			perror("Reading from interface");
+			close(src);
+			exit(1);
+		}
+		write(dst, buffer, nread);
+		printf("\n");
 }

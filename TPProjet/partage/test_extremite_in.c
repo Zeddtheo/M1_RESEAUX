@@ -4,7 +4,6 @@
 
 #include "iftun.h"
 #include "extremite.h"
-
 int main (int argc, char **argv){
 
 	if (argc != 3) {
@@ -28,7 +27,7 @@ int main (int argc, char **argv){
 	system(cmd);
 
 	/** Lancement de l'écoute du tunel et renvoi des packets au serveur **/
-	ext_in("123", fdTun,argv[2]);
+	ext_in(argv[2], "123", fdTun);
 
 	return 0;
 }

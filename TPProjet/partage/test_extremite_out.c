@@ -1,3 +1,5 @@
+
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -29,6 +31,7 @@ int main (int argc, char **argv){
 	system(cmd);
 
 	/** Lancement du serveur d'écoute sur le port 123 **/
-	ext_out(fdTun,"123");
+	ext_out("123", fdTun);
+
 	return 0;
 }

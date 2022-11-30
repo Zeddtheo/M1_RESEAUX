@@ -1,32 +1,5 @@
 #include "extremite.h"
 
-
-/* echo des messages reçus (le tout via le descripteur f) */
-void ip_add_route(char *ip){
-  char tmp[100] = "ip route add";
-  strcat(tmp,ip);
-  printf("add route: %s\n", tmp);
-  system(tmp);
-}
-void echo(int f, int fd)
-{
-  ssize_t lu; /* nb d'octets reçus */
-  char tampon[MAXLIGNE+1]; 
-  printf("Echo Ready\n");
-  while ( 1 ){ /* Faire echo et logguer */
-    lu = read(f,tampon,MAXLIGNE);
-    if (lu > 0 ){
-        tampon[lu] = '\0';
-        printf("Lu out: %s\n",tampon);
-        write(fd,tampon,lu);
-      } 
-    else {
-        break;
-      }
-  }
-       
-  close(f);
-}
 int ext_out(int fd, char *port){
   int s,n; /* descripteurs de socket */
   int len,on; /* utilitaires divers */
@@ -118,21 +91,26 @@ int ext_in(int fd, char *hote, char *port)
   fprintf(stderr,"Fin de la session.\n");
   return EXIT_SUCCESS;
 }
-int ext_bi(int tunfd, char *outIp, char *port){
-  int pid = fork();
-  if(pid == -1){
-    perror("fork");
-    exit(EXIT_FAILURE);
+void echo(int f, int fd)
+{
+  ssize_t lu; /* nb d'octets reçus */
+  char tampon[MAXLIGNE+1]; 
+  printf("Echo Ready\n");
+  while ( 1 ){ /* Faire echo et logguer */
+    lu = read(f,tampon,MAXLIGNE);
+    if (lu > 0 ){
+        tampon[lu] = '\0';
+        printf("Lu out: %s\n",tampon);
+        write(fd,tampon,lu);
+      } 
+    else {
+        break;
+      }
   }
-  if(pid == 0){
-    return ext_in(tunfd,outIp,port);
-  }else{
-    return ext_out(tunfd,port);
-  }
+       
+  close(f);
 }
-
-
-void asyncInOut(char *ipOut, char* portOut, char *portIn, int fdTun) {
+void ext_bi(char *ipOut, char* portOut, char *portIn, int fdTun) {
     int f = fork();
 
     if(f < 0){

@@ -7,7 +7,7 @@
 
 # Configurations Réseaux
   - name: Suppression de la passerelle par défaut
-    shell: ip route del default
+    shell: ip route del default1
     ignore_errors: true
 
   - name: Configuration de VM3/eth1
@@ -47,4 +47,10 @@
       routes4: 172.16.2.128/28 172.16.2.162
       state: present
 
-
+  - name: Configuration de la route vers LAN2 via VM2
+    community.general.nmcli:
+      type: ethernet
+      conn_name: eth2 via ansible
+      ifname: eth2
+      routes6: fc00:1234:1::/64 fc00:1234:2::26
+      state: present

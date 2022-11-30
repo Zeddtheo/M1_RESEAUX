@@ -43,6 +43,13 @@
       routes4: 172.16.2.160/28 172.16.2.132
       state: present
 
+  - name: Configuration de la route vers LAN2 via VM2
+    community.general.nmcli:
+      type: ethernet
+      conn_name: eth2 via ansible
+      ifname: eth2
+      routes6: fc00:1234:1::/64 fc00:1234:3::16
+      state: present
   
 
 

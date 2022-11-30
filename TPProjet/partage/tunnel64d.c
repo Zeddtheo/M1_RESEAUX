@@ -22,6 +22,7 @@ typedef struct Conf{
   char *outIp;
   char *outPort;
 }Conf;
+
 //struct Config loadConfig;
 char* getValue(char* line){
   int i;

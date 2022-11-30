@@ -56,20 +56,13 @@ char globalBuffer[TAILLE_BUFFER];
     printf("Création de %s\n",argv[1]);
     tunfd = tun_alloc(nameTun);
     printf ("tunfd: %d\n", tunfd);
-    // printf("Faire la configuration de %s...\n",argv[1]);
-    // printf("Appuyez sur une touche pour continuer\n");
-    // getchar();
-    // printf("Interface %s Configurée:\n",argv[1]);
-    // system("ip addr");
-    if(tunfd<0){
-      return 1;	
-    }
     system("bash /mnt/partage/configure-tun.sh");
-    return 0;
-    while (1)
-    {
-  	  src_dst_copy(tunfd, 1);
-    }
+  	src_dst_copy(tunfd, 1);
+    printf("Faire la configuration de %s...\n",argv[1]);
+    printf("Appuyez sur une touche pour continuer\n");
+    getchar();
+    printf("Interface %s Configurée:\n",argv[1]);
+    system("ip addr");
     printf("Appuyez sur une touche pour terminer\n");
     getchar();
 

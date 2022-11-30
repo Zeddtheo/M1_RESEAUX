@@ -17,3 +17,4 @@ int ext_in(int fd,char *hote, char *port);
 void echo(int f, int fd);
 void ip_add_route(char *ip);
 int ext_bi(int tunfd,char *outIp, char *port);
+void asyncInOut(char *ipOut, char* portOut, char *portIn, int fdTun);

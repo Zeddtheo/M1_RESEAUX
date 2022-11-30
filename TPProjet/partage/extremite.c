@@ -130,3 +130,20 @@ int ext_bi(int tunfd, char *outIp, char *port){
     return ext_out(tunfd,port);
   }
 }
+
+
+void asyncInOut(char *ipOut, char* portOut, char *portIn, int fdTun) {
+    int f = fork();
+
+    if(f < 0){
+	  perror("Fork\n");
+	  exit(1);
+	}
+	else if(f == 0){
+	  sleep(5);
+    ext_in(fdTun, portOut, ipOut);
+  }
+	else {
+    ext_out(fdTun, portIn);
+  }
+}

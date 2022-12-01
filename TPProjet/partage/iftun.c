@@ -37,5 +37,4 @@ void src_dst_copy(int src, int dst){
 			exit(1);
 		}
 		write(dst, buffer, nread);
-		printf("\n");
 }

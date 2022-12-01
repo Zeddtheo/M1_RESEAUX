@@ -77,14 +77,30 @@ int ext_in(int fd, char *hote, char *port)
     perror("allocation de socket");
     exit(3);
   }
-
-  while (connect(s,resol->ai_addr,sizeof(struct sockaddr_in6))<0) {
-    perror("connection");
-    sleep(1);
-  }
+  fprintf(stderr,"le n° de la socket est : %i\n",s);
+  fprintf(stderr,"Essai de connexion à %s (%s) sur le port %s\n\n",fd,port,hote);
+  if (connect(s,resol->ai_addr,sizeof(struct sockaddr_in6))<0) {
+		perror("connection");
+		exit(4);
+	}
   freeaddrinfo(resol); /* /!\ Libération mémoire */
+  while (1) {
+    src_dst_copy(s,1);
+    // char buffer[1500];
+		// int nread;
 
-  src_dst_copy(fd,s);
+		// /* Note that "buffer" should be at least the MTU size of the interface, eg 1500   bytes */
+		// nread = read(fd,buffer,sizeof(buffer));
+
+		// if(nread < 0) {
+		// 	perror("Reading from interface");
+		// 	return -1;
+		// }
+		// write(s, buffer, nread);
+  }
+  
+
+  //src_dst_copy(fd,s);
   /* Destruction de la socket */
   close(s);
 
@@ -110,18 +126,18 @@ void echo(int f, int fd)
        
   close(f);
 }
-void ext_bi(char *ipOut, char* portOut, char *portIn, int fdTun) {
+//Connection bidirectionnel
+void ext_bi(char *ipOut, char* portOut, char *portIn, int fd) {
     int f = fork();
-
     if(f < 0){
-	  perror("Fork\n");
-	  exit(1);
-	}
-	else if(f == 0){
-	  sleep(5);
-    ext_in(fdTun, portOut, ipOut);
-  }
-	else {
-    ext_out(fdTun, portIn);
-  }
+      perror("Fork\n");
+      exit(1);
+	  }
+    else if(f == 0){
+      sleep(5);
+      ext_in(fd ,ipOut,portOut);
+    }
+    else {
+      ext_out(fd, portIn);
+    }
 }

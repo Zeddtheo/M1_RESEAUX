@@ -17,11 +17,11 @@ int main (int argc, char **argv){
 	char *idTun = argv[1];
 
 	char cmd[100];
-	int fdTun;
+	int fd;
 
 
 	/** Récupération du tunel **/
-	fdTun = tun_alloc(idTun);
+	fd = tun_alloc(idTun);
 
 	strcpy(cmd, "bash ./configure-tun.sh ");
 	strcat(cmd, idTun);
@@ -31,7 +31,7 @@ int main (int argc, char **argv){
 	system(cmd);
 
 	/** Lancement du serveur d'écoute sur le port 123 **/
-	ext_out("123", fdTun);
+	ext_out(fd,"123");
 
 	return 0;
 }

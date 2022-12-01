@@ -28,8 +28,6 @@ void test_iftun(char *tun_name, int dst){
 		perror("Allocating interface");
 		exit(1);
 	}
-
-
 	while(1) {
         src_dst_copy(tunfd, dst);
 	}

@@ -5,7 +5,7 @@
 #include "extremite.h"
 #include "iftun.h"
 
-
+//Struct pour sauvegarger les donnes
 typedef struct Conf {
   char *nameTun;
   char *inIp;
@@ -14,8 +14,8 @@ typedef struct Conf {
   char *outIp;
   char *outPort;
 } Conf;
-
-char* getValue(char* line){
+//ON separe les strings pour affecter les valeurs. 
+char* getConfig(char* line){
   int i;
   for(i = 0; line[i] != '='; i++);
   i++;
@@ -24,7 +24,7 @@ char* getValue(char* line){
   value[strlen(value)-1] = '\0';
   return value;
 }
-
+//Pour transferer les valeurs
 Conf* readConfFile(char* filename){
   Conf* confFile = (Conf*)malloc(sizeof(Conf));
   FILE* file = fopen(filename, "r");
@@ -39,12 +39,10 @@ Conf* readConfFile(char* filename){
   ssize_t read;
   int i = 0;
   while((read = getline(&line, &len, file)) != -1){
-
-    /* On saute les commentaires */
     if(line[0] == '#'){
       continue;
     }
-    char* value = getValue(line);
+    char* value = getConfig(line);
     switch (i) {
       case 0:
         confFile->nameTun = (char*)malloc(sizeof(char)*strlen(value));
@@ -75,8 +73,8 @@ Conf* readConfFile(char* filename){
   }
   return confFile;
 }
-
-void printConf(Conf *conf){
+//Present les configurations dans le termimal
+void config_show(Conf *conf){
   printf("name : %s\n", conf->nameTun);
   printf("OUT IP : %s\n", conf->outIp);
   printf("OUT PORT : %s\n", conf->outPort);
@@ -92,9 +90,9 @@ int main(int argc, char **argv){
 	};
   Conf *conf = readConfFile(argv[1]);
 
-  printConf(conf);
-  int fdTun = tun_alloc(conf->nameTun);
-  if(fdTun == -1) {
+  config_show(conf);
+  int fd = tun_alloc(conf->nameTun);
+  if(fd == -1) {
       fprintf(stderr, "ERREUR ALLOCATION TUNNEL\n");
       return 1;
   }
@@ -108,6 +106,6 @@ int main(int argc, char **argv){
   printf("Configuration route\n");
   system("chmod +x configure-route.sh");
   system(cmd2);
-
-  ext_bi(conf->outIp, conf->outPort, conf->inPort, fdTun);
+  //Bidirectional transport
+  ext_bi(conf->outIp, conf->outPort, conf->inPort, fd);
 }

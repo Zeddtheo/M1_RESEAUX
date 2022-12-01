@@ -14,10 +14,10 @@ int main (int argc, char **argv){
 	char *idTun = argv[1];
 
 	char cmd[100];
-	int fdTun;
+	int fd;
 
 	/** Récupération du tunel **/
-	fdTun = tun_alloc(idTun);
+	fd = tun_alloc(idTun);
 
 	strcpy(cmd, "bash ./configure-tun.sh ");
 	strcat(cmd, idTun);
@@ -26,8 +26,8 @@ int main (int argc, char **argv){
 	system("chmod +x configure-tun.sh");
 	system(cmd);
 
-	/** Lancement de l'écoute du tunel et renvoi des packets au serveur **/
-	ext_in(argv[2], "123", fdTun);
+	//Lancer l'écouteur du tunel et renvoi des packets au serveur 
+	ext_in(fd,argv[2],"123");
 
 	return 0;
 }

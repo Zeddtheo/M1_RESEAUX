@@ -5,6 +5,7 @@
         "if.h": "c",
         "if_tun.h": "c",
         "stdio.h": "c",
-        "stdlib.h": "c"
+        "stdlib.h": "c",
+        "extremite.h": "c"
     }
 }

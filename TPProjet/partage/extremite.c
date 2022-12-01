@@ -7,9 +7,10 @@ int ext_out(int fd, char *port){
   struct addrinfo indic = {AI_PASSIVE, /* Toute interface */
                            PF_INET6,SOCK_STREAM,0, /* IP mode connecté */
                            0,NULL,NULL,NULL};
+  fprintf(stderr, "Ecoute sur le port %s\n", port);
   struct sockaddr_in client; /* adresse de socket du client */
   int err = getaddrinfo(NULL,port,&indic,&resol); /* code d'erreur */
-  printf("im here");
+  //printf("im here");
   if (err<0){
     fprintf(stderr,"Résolution: %s\n",gai_strerror(err));
     exit(2);

@@ -96,8 +96,8 @@ int main(int argc, char **argv){
       fprintf(stderr, "ERREUR ALLOCATION TUNNEL\n");
       return 1;
   }
-  char cmd2[256];
   char cmd[256];
+  char cmd2[256];
   sprintf(cmd, "./configure-tun.sh %s %s ", conf->nameTun, conf->inIp);
   printf("Configuration en cours\n");
   system("chmod +x configure-tun.sh");

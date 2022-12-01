@@ -9,12 +9,12 @@ int ext_out(int fd, char *port){
                            0,NULL,NULL,NULL};
   struct sockaddr_in client; /* adresse de socket du client */
   int err = getaddrinfo(NULL,port,&indic,&resol); /* code d'erreur */
-   
+  printf("im here");
   if (err<0){
     fprintf(stderr,"Résolution: %s\n",gai_strerror(err));
     exit(2);
   }
-
+  
   /* Création de la socket, de type TCP / IP */
   if ((s=socket(resol->ai_family,resol->ai_socktype,resol->ai_protocol))<0) {
     perror("allocation de socket");
@@ -87,7 +87,7 @@ int ext_in(int fd, char *hote, char *port)
                           PF_INET6,SOCK_STREAM,0,
                           0,NULL,NULL,NULL
   };
-  
+
   if(getaddrinfo(hote,port,&hints,&resol)<0){
     perror("resolution addresse");
     exit(2);
@@ -142,6 +142,7 @@ void ext_bi(char *ipOut, char* portOut, char *portIn, int fd) {
 	  }
     else if(f == 0){
       ext_in(fd ,ipOut,portOut);
+      sleep(5);
     }
     else {
       ext_out(fd, portIn);

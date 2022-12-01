@@ -52,27 +52,29 @@ int ext_out(int fd, char *port){
       perror("accept");
       exit(7);
     }
-    char hotec[NI_MAXHOST];  char portc[NI_MAXSERV];
+    char hotec[NI_MAXHOST]; 
+    char portc[NI_MAXSERV];
 		err = getnameinfo((struct sockaddr*)&client,len,hotec,NI_MAXHOST,portc,NI_MAXSERV,0);
 		if (err < 0 ){
 			fprintf(stderr,"résolution client (%i): %s\n",n,gai_strerror(err));
 		}else{
 			fprintf(stderr,"accept! (%i) ip=%s port=%s\n",n,hotec,portc);
 		}
-    ssize_t lu; /* nb d'octets reçus */
-    char msg[MAXLIGNE+1]; /* tampons pour les communications */
-		char tampon[MAXLIGNE+1];
-    do { /* Faire echo et logguer */
-  		lu = recv(n,tampon,MAXLIGNE,0);
-  		if (lu > 0 )
-  		{
-  			//tampon[lu] = '\0';
-            /* log */
+    echo(n,hotec,portc,fd);
+    // ssize_t lu; /* nb d'octets reçus */
+    // char msg[MAXLIGNE+1]; /* tampons pour les communications */
+		// char tampon[MAXLIGNE+1];
+    // do { /* Faire echo et logguer */
+  	// 	lu = recv(n,tampon,MAXLIGNE,0);
+  	// 	if (lu > 0 )
+  	// 	{
+  	// 		//tampon[lu] = '\0';
+    //         /* log */
 
-  			snprintf(msg,MAXLIGNE,"> %s",tampon);
-  			write(fd, tampon, lu);
-  		}
-	   }while (1);
+  	// 		snprintf(msg,MAXLIGNE,"> %s",tampon);
+  	// 		write(fd, tampon, lu);
+  	// 	}
+	  //  }while (1);
   }
   close(n);
   return EXIT_SUCCESS;
@@ -104,34 +106,60 @@ int ext_in(int fd, char *hote, char *port)
 		exit(4);
 	}
   freeaddrinfo(resol); /* /!\ Libération mémoire */
-  while (1) {
-    src_dst_copy(fd,s);
-  }
-  //src_dst_copy(fd,s);
-  /* Destruction de la socket */
-  close(s);
+  /* Session */
 
-  fprintf(stderr,"Fin de la session.\n");
+	char buffer[1024];
+	int nread;
+
+	while (1) {
+		nread = read(fd, buffer, 1024);
+		if (nread <= 0) {
+			printf("nread = %d\n", nread);
+			break;
+		}
+
+		printf("%d caracteres lus par le  client : \n", nread);
+		for (int i = 0; i < nread; i++) {
+			printf("%c", buffer[i]);
+		}
+		printf("\n");
+
+		send(s, buffer, nread, 0);
+	}
+
+	close(s);
+	fprintf(stderr, "Fin de la session.\n");
+  // while (1) {
+  //   src_dst_copy(fd,s);
+  // }
+  // /* Destruction de la socket */
+  // close(s);
+
+  // fprintf(stderr,"Fin de la session.\n");
   return EXIT_SUCCESS;
 }
-void echo(int f, int fd)
+void echo(int fd, char *hote, char *port, int tunnel)
 {
-  ssize_t lu; /* nb d'octets reçus */
-  char tampon[MAXLIGNE+1]; 
-  printf("Echo Ready\n");
-  while ( 1 ){ /* Faire echo et logguer */
-    lu = read(f,tampon,MAXLIGNE);
-    if (lu > 0 ){
-        tampon[lu] = '\0';
-        printf("Lu out: %s\n",tampon);
-        write(fd,tampon,lu);
-      } 
-    else {
-      break;
-    }
-  }
-       
-  close(f);
+  int nread;
+	char buffer[1024];
+	int pid = getpid();
+
+	while (1) {
+		nread = recv(fd, buffer, 1024, 0);
+		if (nread <= 0) {
+			printf("nread = %d\n", nread);
+			break;
+		}
+		printf("%d caracteres lus par le serveur :\n", nread);
+		for (int i = 0; i < nread; i++) {
+			printf("%c", buffer[i]);
+		}
+		printf("\n");
+		write(tunnel, buffer, nread);
+	}
+
+	close(fd);
+	fprintf(stderr, "[%s:%s](%i): Termine.\n", hote, port, pid);
 }
 //Connection bidirectionnel
 void ext_bi(char *ipOut, char* portOut, char *portIn, int fd) {

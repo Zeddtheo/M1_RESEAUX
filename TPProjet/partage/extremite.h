@@ -14,5 +14,5 @@
 
 int ext_out(int fd, char *port);
 int ext_in(int fd,char *hote, char *port);
-void echo(int f, int fd);
+void echo(int fd, char *hote, char *port, int tunnel);
 void ext_bi(char *ipOut, char* portOut, char *portIn, int fdTun);

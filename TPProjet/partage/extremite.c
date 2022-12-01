@@ -85,18 +85,7 @@ int ext_in(int fd, char *hote, char *port)
 	}
   freeaddrinfo(resol); /* /!\ Libération mémoire */
   while (1) {
-    src_dst_copy(s,1);
-    // char buffer[1500];
-		// int nread;
-
-		// /* Note that "buffer" should be at least the MTU size of the interface, eg 1500   bytes */
-		// nread = read(fd,buffer,sizeof(buffer));
-
-		// if(nread < 0) {
-		// 	perror("Reading from interface");
-		// 	return -1;
-		// }
-		// write(s, buffer, nread);
+    src_dst_copy(fd,s);
   }
   
 

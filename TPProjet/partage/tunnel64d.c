@@ -6,7 +6,7 @@
 #include "iftun.h"
 
 //Struct pour sauvegarger les donnes
-typedef struct Conf {
+typedef struct Config{
   char *nameTun;
   char *inIp;
   char *inPort;
